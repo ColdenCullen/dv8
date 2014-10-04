@@ -10,18 +10,18 @@
 
         "v8_base",
         "v8_libbase",
-        "v8_snapshot"
+        "v8_snapshot",
+        "v8_libplatform"
     ],
     "libs-windows": [
-        "ws2_32", "winmm", "oleaut32"
+        "ws2_32", "winmm", "oleaut32", "advapi32"
     ],
     "libs-posix": [
         "c++"
     ],
 
-    "dflags-windows": [
-        "-m64"
-    ],
+    "dflags-windows": [ "-m64" ],
+    "lflags-windows": [ "/LTCG" ],
 
     "sourcePaths": [ "source/" ],
     "sourceFiles-windows": [
