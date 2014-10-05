@@ -4,40 +4,78 @@
     "copyright": "Copyright © 2014, Colden Cullen",
     "license": "MIT",
     "authors": [ "Colden Cullen" ],
-    "libs": [
-        "icuuc",
-        "icui18n",
 
-        "v8_base",
-        "v8_libbase",
-        "v8_snapshot",
-        "v8_libplatform"
-    ],
-    "libs-windows": [
-        "ws2_32", "winmm", "oleaut32", "advapi32"
-    ],
-    "libs-posix": [
-        "c++"
-    ],
-
-    "dflags-windows": [ "-m64" ],
-    "lflags-windows": [ "/LTCG" ],
-
-    "sourcePaths": [ "source/" ],
-    "sourceFiles-windows": [
-        "source/c/instantiations.obj"
-    ],
-    "sourceFiles-posix": [
-        "source/c/instantiations.o"
-    ],
-
-    "preBuildCommands-windows": [
-        "robocopy $PACKAGE_DIR\\lib\\windows\\ .\\ /MIR /XX /NFL /NDL /NJH /NJS || (exit 0)"
-    ],
-    "preBuildCommands-osx": [
-        "cp $PACKAGE_DIR/lib/osx/* /usr/local/lib/ || True"
-    ],
-    "preBuildCommands-linux": [
-        "cp $PACKAGE_DIR/lib/linux/* /usr/lib/ || true"
+    "libs": [ "v8" ],
+    "configurations": [
+        {
+            "name": "windows-x64",
+            "platforms": [ "windows-x86_64" ],
+            "sourceFiles": [
+                "source/c/instantiations-windows-x64.obj"
+            ],
+            "copyFiles": [
+                "bin/windows/x64/v8.dll",
+                "bin/windows/x64/icuuc.dll",
+                "bin/windows/x64/icui18n.dll"
+            ],
+            "preBuildCommands": [
+                "robocopy $PACKAGE_DIR\\lib\\windows\\x64\\ .\\ /MIR /XX /NFL /NDL /NJH /NJS || (exit 0)"
+            ]
+        },
+        {
+            "name": "windows-x86",
+            "platforms": [ "windows-x86" ],
+            "sourceFiles": [
+                "source/c/instantiations-windows-x86.obj"
+            ],
+            "copyFiles": [
+                "bin/windows/x86/v8.dll",
+                "bin/windows/x86/icuuc.dll",
+                "bin/windows/x86/icui18n.dll"
+            ],
+            "preBuildCommands": [
+                "robocopy $PACKAGE_DIR\\lib\\windows\\x86\\ .\\ /MIR /XX /NFL /NDL /NJH /NJS || (exit 0)"
+            ]
+        },
+        {
+            "name": "osx-x64",
+            "platforms": [ "osx-x86_64" ],
+            "sourceFiles": [
+                "source/c/instantiations-osx-x64.o"
+            ],
+            "preBuildCommands": [
+                "cp $PACKAGE_DIR/lib/osx/x64/* /usr/local/lib/ || True"
+            ]
+        },
+        {
+            "name": "osx-x86",
+            "platforms": [ "osx-x86" ],
+            "sourceFiles": [
+                "source/c/instantiations-osx-x86.o"
+            ],
+            "preBuildCommands": [
+                "cp $PACKAGE_DIR/lib/osx/x86/* /usr/local/lib/ || True"
+            ]
+        },
+        {
+            "name": "linux-x64-x86_64",
+            "platforms": [ "linux" ],
+            "sourceFiles": [
+                "source/c/instantiations-linux-x64.o"
+            ],
+            "preBuildCommands": [
+                "cp $PACKAGE_DIR/lib/linux/x64/* /usr/local/lib/ || true"
+            ]
+        },
+        {
+            "name": "linux-x86",
+            "platforms": [ "linux-x86" ],
+            "sourceFiles": [
+                "source/c/instantiations-linux-x86.o"
+            ],
+            "preBuildCommands": [
+                "cp $PACKAGE_DIR/lib/linux/x86/* /usr/local/lib/ || true"
+            ]
+        }
     ]
 }
