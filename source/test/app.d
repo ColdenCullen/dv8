@@ -21,7 +21,7 @@ unittest
 
     Isolate isolate = Isolate.New();
     {
-        auto isolate_scope = scoped!( Isolate.Scope )( isolate );
+        auto isolate_scope = new Isolate.Scope( isolate );//scoped!( Isolate.Scope )( isolate );
         //auto handle_scope = scoped!( HandleScope )( isolate );
 
         /*
@@ -36,8 +36,7 @@ unittest
         writeln( "Scoped!" );
     }
     V8.Dispose();
-    V8.ShutdownPlatform();
-    //delete platform;
+    //V8.ShutdownPlatform();
 
     writeln( "Shutdown!" );
 }

@@ -104,7 +104,7 @@ extern(C++, v8) // namespace v8
         /**
          * Initial configuration parameters for a new Isolate.
          */
-        struct CreateParams
+        static struct CreateParams
         {
             /**
              * The optional entry_hook allows the host application to provide the
@@ -140,7 +140,7 @@ extern(C++, v8) // namespace v8
          * Stack-allocated class which sets the isolate for all operations
          * executed within a local scope.
          */
-        class Scope
+        static class Scope
         {
         public:
             this( Isolate isolate )
@@ -230,8 +230,7 @@ extern(C++, v8) // namespace v8
     class HandleScope
     {
     public:
-        //TODO
-        //this( Isolate isolate );
+        this( Isolate isolate );
 
         static int NumberOfHandles( Isolate isolate );
         //TODO
