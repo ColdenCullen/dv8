@@ -2,9 +2,11 @@ module v8.v8;
 
 import core.stdc.stdint;
 
+enum TYPE_CHECK( T, S ) = __traits( compiles, { *(cast(T**)null) = cast(S*)null; } );
+
 extern(C++, v8) // namespace v8
 {
-    class V8
+    final abstract class V8
     {
     static:
         /**
@@ -50,9 +52,6 @@ extern(C++, v8) // namespace v8
     struct ResourceConstraints
     {
     public:
-        //TODO
-        //this();
-
         /**
          * Configures the constraints with reasonable default values based on the
          * capabilities of the current device the VM is running on.
@@ -66,10 +65,23 @@ extern(C++, v8) // namespace v8
          */
         //TODO
         /*
+         * Mangling Problems:
+         * ---
+         * Windows:
+         * From D:
+         * ?ConfigureDefaults@ResourceConstraints@v8@@QEAAX_K_KI@Z
+         * public: void __cdecl v8::ResourceConstraints::ConfigureDefaults(unsigned __int64,unsigned __int64,unsigned int)
+         *
+         * From C++:
+         * ?ConfigureDefaults@ResourceConstraints@v8@@QEAAX_K0I@Z
+         * public: void __cdecl v8::ResourceConstraints::ConfigureDefaults(unsigned __int64,unsigned __int64,unsigned int) __ptr64
+         * ---
+         */
+        /*
         void ConfigureDefaults(uint64_t physical_memory,
                                uint64_t virtual_memory_limit,
                                uint32_t number_of_processors);
-        */
+        //*/
 
         int max_semi_space_size() @property const { return max_semi_space_size_; }
         void max_semi_space_size(int value) @property { max_semi_space_size_ = value; }
@@ -113,7 +125,7 @@ extern(C++, v8) // namespace v8
              * generated function. Furthermore, if an  entry_hook is given, V8 will
              * always run without a context snapshot.
              */
-            //TODO
+            // [TODO] - Implement Isolate.CreateParams.entry_hook (requires: FunctionEntryHook)
             //FunctionEntryHook entry_hook;
             size_t entry_hook;
 
@@ -121,7 +133,7 @@ extern(C++, v8) // namespace v8
              * Allows the host application to provide the address of a function that is
              * notified each time code is added, moved or removed.
              */
-            //TODO
+            // [TODO] - Implement Isolate.CreateParams.code_event_handler (requires: JitCodeEventHandler)
             //JitCodeEventHandler code_event_handler;
             size_t code_event_handler;
 
@@ -140,19 +152,17 @@ extern(C++, v8) // namespace v8
          * Stack-allocated class which sets the isolate for all operations
          * executed within a local scope.
          */
-        static class Scope
+        static struct Scope
         {
         public:
             this( Isolate isolate )
             {
                 isolate_ = isolate;
-                //TODO
-                //isolate_.Enter();
+                isolate_.Enter();
             }
             ~this()
             {
-                //TODO
-                //isolate_.Exit();
+                isolate_.Exit();
             }
 
         private:
@@ -187,8 +197,7 @@ extern(C++, v8) // namespace v8
          * Saves the previously entered one (if any), so that it can be
          * restored when exiting.  Re-entering an isolate is allowed.
          */
-        //TODO
-        //void Enter();
+        final void Enter();
 
         /**
          * Exits this isolate by restoring the previously entered one in the
@@ -197,15 +206,13 @@ extern(C++, v8) // namespace v8
          *
          * Requires: this == Isolate::GetCurrent().
          */
-        //TODO
-        //void Exit();
+        final void Exit();
 
         /**
          * Disposes the isolate.  The isolate must not be entered by any
          * thread to be disposable.
          */
-        //TODO
-        //void Dispose();
+        final void Dispose();
     }
 
     class Platform
@@ -230,11 +237,102 @@ extern(C++, v8) // namespace v8
     class HandleScope
     {
     public:
+        // [TODO] - Investigate Linker Errors
+        /*
+         * Mangling Problems:
+         * ---
+         * Windows:
+         * From D:
+         * ?__ctor@HandleScope@v8@@QEAA@PEAVIsolate@2@@Z
+         * public: __cdecl v8::HandleScope::__ctor(class v8::Isolate *)
+         *
+         * From C++:
+         * ??0HandleScope@v8@@QEAA@PEAVIsolate@1@@Z
+         * public: __cdecl v8::HandleScope::HandleScope(class v8::Isolate * __ptr64) __ptr64
+         * ---
+         */
+        pragma( mangle, "??0HandleScope@v8@@QEAA@PEAVIsolate@1@@Z" )
         this( Isolate isolate );
 
+        /**
+         * Counts the number of allocated handles.
+         */
         static int NumberOfHandles( Isolate isolate );
-        //TODO
-        //Isolate GetIsolate() const;
+        final Isolate GetIsolate() const;
+    }
+
+    /**
+     * A sandboxed execution context with its own set of built-in objects
+     * and functions.
+     */
+    struct Context
+    {
+    public:
+        /**
+         * Returns the global proxy object.
+         *
+         * Global proxy object is a thin wrapper whose prototype points to actual
+         * context's global object with the properties like Object, etc. This is done
+         * that way for security reasons (for more details see
+         * https://wiki.mozilla.org/Gecko:SplitWindow).
+         *
+         * Please note that changes to global proxy object prototype most probably
+         * would break VM---v8 expects only global object as a prototype of global
+         * proxy object.
+         */
+        // [TODO] - Implement Context.Global (requires: Local!T, Object)
+        //final Local!Object Global();
+
+        /**
+         * Detaches the global object from its context before
+         * the global object can be reused to create a new context.
+         */
+        final void DetachGlobal();
+
+        /**
+         * Creates a new context and returns a handle to the newly allocated
+         * context.
+         *
+         * \param isolate The isolate in which to create the context.
+         *
+         * \param extensions An optional extension configuration containing
+         * the extensions to be installed in the newly created context.
+         *
+         * \param global_template An optional object template from which the
+         * global object for the newly created context will be created.
+         *
+         * \param global_object An optional global object to be reused for
+         * the newly created context. This global object must have been
+         * created by a previous call to Context::New with the same global
+         * template. The state of the global object will be completely reset
+         * and only object identify will remain.
+         */
+        // [TODO] - Implement Context.New (requires: Local, Extension Configuration, Handle!T, ObjectTemplate, Value)
+        /*
+        static Local!Context New(
+            Isolate* isolate,
+            ExtensionConfiguration* extensions = NULL,
+            Handle<ObjectTemplate> global_template = Handle<ObjectTemplate>(),
+            Handle<Value> global_object = Handle<Value>());
+        */
+
+        /**
+         * Sets the security token for the context.  To access an object in
+         * another context, the security tokens must match.
+         */
+        // [TODO] - Implement Context.SetSecurityToken (requires: Handle!T, Value)
+        /*
+        final void SetSecurityToken(Handle!Value token);
+        */
+
+        /** Restores the security token to the default value. */
+        final void UseDefaultSecurityToken();
+
+        /** Returns the security token of this context.*/
+        // [TODO] - Implement Context.GetSecurityToken (requires: Handle!T, Value)
+        /*
+        final Handle!Value GetSecurityToken();
+        */
     }
 
     class Value
@@ -242,9 +340,13 @@ extern(C++, v8) // namespace v8
 
     }
 
-    class Local( Value )
+    class Handle( T )
     {
-        void Clear();
+        final void Clear();
+    }
+
+    class Local( T ) : Handle!T
+    {
     }
 
     extern( C++, platform )

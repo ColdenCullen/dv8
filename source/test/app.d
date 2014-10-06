@@ -19,10 +19,12 @@ unittest
 
     writeln( "Initialized!" );
 
-    Isolate isolate = Isolate.New();
+    Isolate.CreateParams params;
+    //params.constraints.ConfigureDefaults( 0, 0, 0 );
+    Isolate isolate = Isolate.New( params );
     {
-        auto isolate_scope = new Isolate.Scope( isolate );//scoped!( Isolate.Scope )( isolate );
-        //auto handle_scope = scoped!( HandleScope )( isolate );
+        auto isolate_scope = Isolate.Scope( isolate );
+        auto handle_scope = new HandleScope( isolate );//scoped!( HandleScope )( isolate );
 
         /*
         Handle<Context> context = CreateShellContext(isolate);
@@ -35,6 +37,7 @@ unittest
 
         writeln( "Scoped!" );
     }
+    isolate.Dispose();
     V8.Dispose();
     //V8.ShutdownPlatform();
 
