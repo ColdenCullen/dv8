@@ -71,22 +71,22 @@ extern(C++, v8) // namespace v8
                                uint32_t number_of_processors);
         */
 
-        int max_semi_space_size() const { return max_semi_space_size_; }
-        void set_max_semi_space_size(int value) { max_semi_space_size_ = value; }
-        int max_old_space_size() const { return max_old_space_size_; }
-        void set_max_old_space_size(int value) { max_old_space_size_ = value; }
-        int max_executable_size() const { return max_executable_size_; }
-        void set_max_executable_size(int value) { max_executable_size_ = value; }
-        uint32_t* stack_limit() /*const*/ { return stack_limit_; }
+        int max_semi_space_size() @property const { return max_semi_space_size_; }
+        void max_semi_space_size(int value) @property { max_semi_space_size_ = value; }
+        int max_old_space_size() @property const { return max_old_space_size_; }
+        void max_old_space_size(int value) @property { max_old_space_size_ = value; }
+        int max_executable_size() @property const { return max_executable_size_; }
+        void max_executable_size(int value) @property { max_executable_size_ = value; }
+        uint32_t* stack_limit() @property /*const*/ { return stack_limit_; }
         // Sets an address beyond which the VM's stack may not grow.
-        void set_stack_limit(uint32_t* value) { stack_limit_ = value; }
-        int max_available_threads() const { return max_available_threads_; }
+        void stack_limit(uint32_t* value) @property { stack_limit_ = value; }
+        int available_threads() @property const { return max_available_threads_; }
         // Set the number of threads available to V8, assuming at least 1.
-        void set_max_available_threads(int value) {
+        void max_available_threads(int value) @property {
             max_available_threads_ = value;
         }
-        size_t code_range_size() const { return code_range_size_; }
-        void set_code_range_size(size_t value) {
+        size_t code_range_size() @property const { return code_range_size_; }
+        void code_range_size(size_t value) @property {
             code_range_size_ = value;
         }
 
