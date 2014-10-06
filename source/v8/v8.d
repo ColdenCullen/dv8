@@ -115,6 +115,7 @@ extern(C++, v8) // namespace v8
              */
             //TODO
             //FunctionEntryHook entry_hook;
+            size_t entry_hook;
 
             /**
              * Allows the host application to provide the address of a function that is
@@ -122,6 +123,7 @@ extern(C++, v8) // namespace v8
              */
             //TODO
             //JitCodeEventHandler code_event_handler;
+            size_t code_event_handler;
 
             /**
              * ResourceConstraints to use for the new Isolate.
