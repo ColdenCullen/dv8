@@ -337,7 +337,292 @@ extern(C++, v8) // namespace v8
 
     class Value
     {
+    public:
+        /**
+         * Returns true if this value is the undefined value.  See ECMA-262
+         * 4.3.10.
+         */
+        final bool IsUndefined() const;
 
+        /**
+         * Returns true if this value is the null value.  See ECMA-262
+         * 4.3.11.
+         */
+        final bool IsNull() const;
+
+        /**
+         * Returns true if this value is true.
+         */
+        final bool IsTrue() const;
+
+        /**
+         * Returns true if this value is false.
+         */
+        final bool IsFalse() const;
+
+        /**
+         * Returns true if this value is a symbol or a string.
+         * This is an experimental feature.
+         */
+        final bool IsName() const;
+
+        /**
+         * Returns true if this value is an instance of the String type.
+         * See ECMA-262 8.4.
+         */
+        final bool IsString() const;
+
+        /**
+         * Returns true if this value is a symbol.
+         * This is an experimental feature.
+         */
+        final bool IsSymbol() const;
+
+        /**
+         * Returns true if this value is a function.
+         */
+        final bool IsFunction() const;
+
+        /**
+         * Returns true if this value is an array.
+         */
+        final bool IsArray() const;
+
+        /**
+         * Returns true if this value is an object.
+         */
+        final bool IsObject() const;
+
+        /**
+         * Returns true if this value is boolean.
+         */
+        final bool IsBoolean() const;
+
+        /**
+         * Returns true if this value is a number.
+         */
+        final bool IsNumber() const;
+
+        /**
+         * Returns true if this value is external.
+         */
+        final bool IsExternal() const;
+
+        /**
+         * Returns true if this value is a 32-bit signed integer.
+         */
+        final bool IsInt32() const;
+
+        /**
+         * Returns true if this value is a 32-bit unsigned integer.
+         */
+        final bool IsUint32() const;
+
+        /**
+         * Returns true if this value is a Date.
+         */
+        final bool IsDate() const;
+
+        /**
+         * Returns true if this value is an Arguments object.
+         */
+        final bool IsArgumentsObject() const;
+
+        /**
+         * Returns true if this value is a Boolean object.
+         */
+        final bool IsBooleanObject() const;
+
+        /**
+         * Returns true if this value is a Number object.
+         */
+        final bool IsNumberObject() const;
+
+        /**
+         * Returns true if this value is a String object.
+         */
+        final bool IsStringObject() const;
+
+        /**
+         * Returns true if this value is a Symbol object.
+         * This is an experimental feature.
+         */
+        final bool IsSymbolObject() const;
+
+        /**
+         * Returns true if this value is a NativeError.
+         */
+        final bool IsNativeError() const;
+
+        /**
+         * Returns true if this value is a RegExp.
+         */
+        final bool IsRegExp() const;
+
+        /**
+         * Returns true if this value is a Generator function.
+         * This is an experimental feature.
+         */
+        final bool IsGeneratorFunction() const;
+
+        /**
+         * Returns true if this value is a Generator object (iterator).
+         * This is an experimental feature.
+         */
+        final bool IsGeneratorObject() const;
+
+        /**
+         * Returns true if this value is a Promise.
+         * This is an experimental feature.
+         */
+        final bool IsPromise() const;
+
+        /**
+         * Returns true if this value is a Map.
+         * This is an experimental feature.
+         */
+        final bool IsMap() const;
+
+        /**
+         * Returns true if this value is a Set.
+         * This is an experimental feature.
+         */
+        final bool IsSet() const;
+
+        /**
+         * Returns true if this value is a WeakMap.
+         * This is an experimental feature.
+         */
+        final bool IsWeakMap() const;
+
+        /**
+         * Returns true if this value is a WeakSet.
+         * This is an experimental feature.
+         */
+        final bool IsWeakSet() const;
+
+        /**
+         * Returns true if this value is an ArrayBuffer.
+         * This is an experimental feature.
+         */
+        final bool IsArrayBuffer() const;
+
+        /**
+         * Returns true if this value is an ArrayBufferView.
+         * This is an experimental feature.
+         */
+        final bool IsArrayBufferView() const;
+
+        /**
+         * Returns true if this value is one of TypedArrays.
+         * This is an experimental feature.
+         */
+        final bool IsTypedArray() const;
+
+        /**
+         * Returns true if this value is an Uint8Array.
+         * This is an experimental feature.
+         */
+        final bool IsUint8Array() const;
+
+        /**
+         * Returns true if this value is an Uint8ClampedArray.
+         * This is an experimental feature.
+         */
+        final bool IsUint8ClampedArray() const;
+
+        /**
+         * Returns true if this value is an Int8Array.
+         * This is an experimental feature.
+         */
+        final bool IsInt8Array() const;
+
+        /**
+         * Returns true if this value is an Uint16Array.
+         * This is an experimental feature.
+         */
+        final bool IsUint16Array() const;
+
+        /**
+         * Returns true if this value is an Int16Array.
+         * This is an experimental feature.
+         */
+        final bool IsInt16Array() const;
+
+        /**
+         * Returns true if this value is an Uint32Array.
+         * This is an experimental feature.
+         */
+        final bool IsUint32Array() const;
+
+        /**
+         * Returns true if this value is an Int32Array.
+         * This is an experimental feature.
+         */
+        final bool IsInt32Array() const;
+
+        /**
+         * Returns true if this value is a Float32Array.
+         * This is an experimental feature.
+         */
+        final bool IsFloat32Array() const;
+
+        /**
+         * Returns true if this value is a Float64Array.
+         * This is an experimental feature.
+         */
+        final bool IsFloat64Array() const;
+
+        /**
+         * Returns true if this value is a DataView.
+         * This is an experimental feature.
+         */
+        final bool IsDataView() const;
+
+        // [TODO] - Implement these (requires: Local!*)
+        /*
+        final Local!Boolean ToBoolean() const;
+        final Local!Number ToNumber() const;
+        final Local!String ToString() const;
+        final Local!String ToDetailString() const;
+        final Local!Object ToObject() const;
+        final Local!Integer ToInteger() const;
+        final Local!Uint32 ToUint32() const;
+        final Local!Int32 ToInt32() const;
+        */
+
+        /**
+         * Attempts to convert a string to an array index.
+         * Returns an empty handle if the conversion fails.
+         */
+        // [TODO] - Implement Value.ToArrayIndex (requires: Local!Uint32)
+        /*
+        final Local!Uint32 ToArrayIndex() const;
+        */
+
+        final bool BooleanValue() const;
+        final double NumberValue() const;
+        final int64_t IntegerValue() const;
+        final uint32_t Uint32Value() const;
+        final int32_t Int32Value() const;
+
+        /** JS == */
+        // [TODO] Implement these (requires: Handle!Value)
+        /*
+        final bool Equals(Handle!Value that) const;
+        final bool StrictEquals(Handle!Value that) const;
+        final bool SameValue(Handle!Value that) const;
+        */
+
+        static Value* Cast(T)(T* value);
+
+    private:
+        final bool QuickIsUndefined() const;
+        final bool QuickIsNull() const;
+        final bool QuickIsString() const;
+        final bool FullIsUndefined() const;
+        final bool FullIsNull() const;
+        final bool FullIsString() const;
     }
 
     /**
@@ -724,14 +1009,78 @@ extern(C++, v8) // namespace v8
 
         static Local!Object New( Isolate* isolate );
         static Object Cast( Value obj );
+
+    private:
+        static void CheckCast(Value obj);
+        // [TODO] - Implement Object.SlowGetInternalField (requires: Local!Value)
+        /*
+        final Local!Value SlowGetInternalField(int index);
+        */
+        final void* SlowGetAlignedPointerFromInternalField(int index);
     }
 
-    class Handle( T )
+    /**
+     * An object reference managed by the v8 garbage collector.
+     *
+     * All objects returned from v8 have to be tracked by the garbage
+     * collector so that it knows that the objects are still alive.  Also,
+     * because the garbage collector may move objects, it is unsafe to
+     * point directly to an object.  Instead, all objects are stored in
+     * handles which are known by the garbage collector and updated
+     * whenever an object moves.  Handles should always be passed by value
+     * (except in cases like out-parameters) and they should never be
+     * allocated on the heap.
+     *
+     * There are two types of handles: local and persistent handles.
+     * Local handles are light-weight and transient and typically used in
+     * local operations.  They are managed by HandleScopes.  Persistent
+     * handles can be used when storing objects across several independent
+     * operations and have to be explicitly deallocated when they're no
+     * longer used.
+     *
+     * It is safe to extract the object stored in the handle by
+     * dereferencing the handle (for instance, to extract the Object* from
+     * a Handle<Object>); the value will still be governed by a handle
+     * behind the scenes and the same rules apply to these values as to
+     * their handles.
+     */
+    class Handle(T)
     {
-        final void Clear();
+    public:
+        /**
+         * Creates an empty handle.
+         */
+        this() { val_ = null; }
+
+        // [TODO] - Tons of missing functions here
+
+        /**
+         * Returns true if the handle is empty.
+         */
+        bool IsEmpty() const { return val_ is null; }
+
+        /**
+         * Sets the handle to be empty. IsEmpty() will then return true.
+         */
+        final void Clear() { val_ = null; }
+
+    private:
+        static if(is(T == class))
+            alias StorageT = T;
+        else
+            alias StorageT = T*;
+
+        /**
+         * Creates a new handle for the specified value.
+         */
+        this(StorageT val) { val_ = val; }
+
+        static Handle!T New(Isolate isolate, StorageT that);
+
+        StorageT val_;
     }
 
-    class Local( T ) : Handle!T
+    class Local(T) : Handle!T
     {
     }
 
