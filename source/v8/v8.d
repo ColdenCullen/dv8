@@ -340,6 +340,392 @@ extern(C++, v8) // namespace v8
 
     }
 
+    /**
+     * A JavaScript object (ECMA-262, 4.3.3)
+     */
+    // [TODO] - Rename to Object (somehow?)
+    class JSObject : Value
+    {
+    public:
+        // [TODO] - Implement Object.Set (requires: Handle!Value)
+        /*
+        final bool Set(Handle!Value key, Handle!Value value);
+        final bool Set(uint32_t index, Handle<Value> value);
+        */
+
+        // Sets an own property on this object bypassing interceptors and
+        // overriding accessors or read-only properties.
+        //
+        // Note that if the object has an interceptor the property will be set
+        // locally, but since the interceptor takes precedence the local property
+        // will only be returned if the interceptor doesn't return a value.
+        //
+        // Note also that this only works for named properties.
+        // [TODO] - Implement Object.ForceSet (requires: Handle!Value, PropertyAttribs)
+        /*
+        final bool ForceSet(Handle!Value key,
+                      Handle!Value value,
+                      PropertyAttribute attribs = None);
+        */
+
+        // [TODO] - Implement Object.Get (requires: Local!Value, Handle!Value)
+        /*
+        final Local!Value Get(Handle!Value key);
+        final Local!Value Get(uint32_t index);
+        */
+
+        /**
+         * Gets the property attributes of a property which can be None or
+         * any combination of ReadOnly, DontEnum and DontDelete. Returns
+         * None when the property doesn't exist.
+         */
+        // [TODO] - Implement Object.GetPropertyAttributes (requires: PropertyAttribute, Handle!Value)
+        /*
+        final PropertyAttribute GetPropertyAttributes(Handle!Value key);
+        */
+
+        /**
+         * Returns Object.getOwnPropertyDescriptor as per ES5 section 15.2.3.3.
+         */
+        // [TODO] - Implement Object.GetOwnPropertyDescriptor (requires: Local!Value, Local!String)
+        /*
+        final Local!Value GetOwnPropertyDescriptor(Local!String key);
+        */
+
+        // [TODO] - Implement Object.Has (requires: Handle!Value)
+        /*
+        final bool Has(Handle!Value key);
+        */
+
+        // [TODO] - Implement Object.Delete (requires: Handle!Value)
+        /*
+        final bool Delete(Handle!Value key);
+        */
+
+        // Delete a property on this object bypassing interceptors and
+        // ignoring dont-delete attributes.
+        // [TODO] - Implement Object.ForceDelete (requires: Handle!Value)
+        /*
+        final bool ForceDelete(Handle!Value key);
+        */
+
+        final bool Has(uint32_t index);
+
+        final bool Delete(uint32_t index);
+
+        // [TODO] - Implement Object.SetAccessor (requires: Handle!String, Accessor*Callback, Handle!Value, AccessControl, PropertyAttribute)
+        /*
+        final bool SetAccessor(Handle!String name,
+                               AccessorGetterCallback getter,
+                               AccessorSetterCallback setter = 0,
+                               Handle!Value data = Handle!Value(),
+                               AccessControl settings = DEFAULT,
+                               PropertyAttribute attribute = None);
+        final bool SetAccessor(Handle!Name name,
+                               AccessorNameGetterCallback getter,
+                               AccessorNameSetterCallback setter = 0,
+                               Handle!Value data = Handle!Value(),
+                               AccessControl settings = DEFAULT,
+                               PropertyAttribute attribute = None);
+        */
+
+        // This function is not yet stable and should not be used at this time.
+        // [TODO] - Implement these (requires: Local!Name, Local!DeclaredAccessorDescriptor, PropertyAttribute, AccessControl)
+        /*
+        final bool SetDeclaredAccessor(Local!Name name,
+                                       Local!DeclaredAccessorDescriptor descriptor,
+                                       PropertyAttribute attribute = None,
+                                       AccessControl settings = DEFAULT);
+
+        final void SetAccessorProperty(Local!Name name,
+                                       Local!Function getter,
+                                       Handle!Function setter = Handle!Function(),
+                                       PropertyAttribute attribute = None,
+                                       AccessControl settings = DEFAULT);
+        */
+
+        /**
+         * Functionality for private properties.
+         * This is an experimental feature, use at your own risk.
+         * Note: Private properties are inherited. Do not rely on this, since it may
+         * change.
+         */
+        // [TODO] - Implement Privates (requires: Handle!Private, Handle!Value, Local!Value)
+        /*
+        final bool HasPrivate(Handle!Private key);
+        final bool SetPrivate(Handle!Private key, Handle!Value value);
+        final bool DeletePrivate(Handle!Private key);
+        final Local!Value GetPrivate(Handle!Private key);
+        */
+
+        /**
+         * Returns an array containing the names of the enumerable properties
+         * of this object, including properties from prototype objects.  The
+         * array returned by this method contains the same values as would
+         * be enumerated by a for-in statement over this object.
+         */
+        // [TODO] - Implement Object.GetPropertyNames (requires: Local!Array)
+        /*
+        final Local!Array GetPropertyNames();
+        */
+
+        /**
+         * This function has the same functionality as GetPropertyNames but
+         * the returned array doesn't contain the names of properties from
+         * prototype objects.
+         */
+        // [TODO] - Implement Object.GetOwnPropertyNames (requires: Local!Array)
+        /*
+        final Local!Array GetOwnPropertyNames();
+        */
+
+        /**
+         * Get the prototype object.  This does not skip objects marked to
+         * be skipped by __proto__ and it does not consult the security
+         * handler.
+         */
+        // [TODO] - Implement Object.GetPrototype (requires: Local!Value)
+        /*
+        final Local!Value GetPrototype();
+        */
+
+        /**
+         * Set the prototype object.  This does not skip objects marked to
+         * be skipped by __proto__ and it does not consult the security
+         * handler.
+         */
+        // [TODO] - Implement Object.SetPrototype (requires: Handle!Value)
+        /*
+        final bool SetPrototype(Handle!Value prototype);
+        */
+
+        /**
+         * Finds an instance of the given function template in the prototype
+         * chain.
+         */
+        // [TODO] - Implement Object.FindInstanceInPrototypeChain (requires: Local!Object, Handle!FunctionTemplate)
+        /*
+        Local!Object FindInstanceInPrototypeChain(Handle!FunctionTemplate tmpl);
+        */
+
+        /**
+         * Call builtin Object.prototype.toString on this object.
+         * This is different from Value::ToString() that may call
+         * user-defined toString function. This one does not.
+         */
+        // [TODO] - Implement Object.ObjectProtoToString (requires: Local!String)
+        /*
+        final Local!String ObjectProtoToString();
+        */
+
+        /**
+         * Returns the name of the function invoked as a constructor for this object.
+         */
+        // [TODO] - Implement Object.GetConstructorName (requires: Local!String)
+        /*
+        final Local!String GetConstructorName();
+        */
+
+        /** Gets the number of internal fields for this Object. */
+        final int InternalFieldCount();
+
+        /** Same as above, but works for Persistents */
+        // [TODO] - Implement Object.InternalFieldCount (requires: PersistantBase!Object)
+        /*
+        static int InternalFieldCount(const ref PersistentBase!Object object)
+        {
+          return object.val_->InternalFieldCount();
+        }
+        */
+
+        /** Gets the value from an internal field. */
+        // [TODO] - Implement Object.GetInternalField (requires: Local!Value)
+        /*
+        final Local!Value GetInternalField(int index);
+        */
+
+        /** Sets the value in an internal field. */
+        // [TODO] - Implement Object.SetInternalField (requires: Handle!Value)
+        /*
+        final void SetInternalField(int index, Handle!Value value);
+        */
+
+        /**
+         * Gets a 2-byte-aligned native pointer from an internal field. This field
+         * must have been set by SetAlignedPointerInInternalField, everything else
+         * leads to undefined behavior.
+         */
+        final void* GetAlignedPointerFromInternalField(int index);
+
+        /** Same as above, but works for Persistents */
+        // [TODO] - Implement Object.GetAlignedPointerFromInternalField (requires: PersistantBase!Object)
+        /*
+        static void* GetAlignedPointerFromInternalField(
+            const ref PersistentBase!Object object, int index)
+        {
+            return object.val_->GetAlignedPointerFromInternalField(index);
+        }
+        */
+
+        /**
+         * Sets a 2-byte-aligned native pointer in an internal field. To retrieve such
+         * a field, GetAlignedPointerFromInternalField must be used, everything else
+         * leads to undefined behavior.
+         */
+        final void SetAlignedPointerInInternalField(int index, void* value);
+
+        // Testers for local properties.
+        // [TODO] - Implement these (requires: Handle!String)
+        //final bool HasOwnProperty(Handle!String key);
+        //final bool HasRealNamedProperty(Handle!String key);
+        final bool HasRealIndexedProperty(uint32_t index);
+        //final bool HasRealNamedCallbackProperty(Handle!String key);
+
+        /**
+         * If result.IsEmpty() no real property was located in the prototype chain.
+         * This means interceptors in the prototype chain are not called.
+         */
+        // [TODO] - Implement Object.GetRealNamedPropertyInPrototypeChain (requires: Handle!String, Local!Value)
+        /*
+        final Local!Value GetRealNamedPropertyInPrototypeChain(Handle!String key);
+        */
+
+        /**
+         * If result.IsEmpty() no real property was located on the object or
+         * in the prototype chain.
+         * This means interceptors in the prototype chain are not called.
+         */
+        // [TODO] - Implement Object.GetRealNamedProperty (requires: Handle!String, Local!Value)
+        /*
+        final Local!Value GetRealNamedProperty(Handle!String key);
+        */
+
+        /** Tests for a named lookup interceptor.*/
+        final bool HasNamedLookupInterceptor();
+
+        /** Tests for an index lookup interceptor.*/
+        final bool HasIndexedLookupInterceptor();
+
+        /**
+         * Turns on access check on the object if the object is an instance of
+         * a template that has access check callbacks. If an object has no
+         * access check info, the object cannot be accessed by anyone.
+         */
+        final void TurnOnAccessCheck();
+
+        /**
+         * Returns the identity hash for this object. The current implementation
+         * uses a hidden property on the object to store the identity hash.
+         *
+         * The return value will never be 0. Also, it is not guaranteed to be
+         * unique.
+         */
+        final int GetIdentityHash();
+
+        /**
+         * Access hidden properties on JavaScript objects. These properties are
+         * hidden from the executing JavaScript and only accessible through the V8
+         * C++ API. Hidden properties introduced by V8 internally (for example the
+         * identity hash) are prefixed with "v8::".
+         */
+        // [TODO] - Implement these (requires: Handle!Value, Handle!String)
+        /*
+        final bool SetHiddenValue(Handle!String key, Handle!Value value);
+        final Local<Value> GetHiddenValue(Handle!String key);
+        final bool DeleteHiddenValue(Handle!String key);
+        */
+
+        /**
+         * Returns true if this is an instance of an api function (one
+         * created from a function created from a function template) and has
+         * been modified since it was created.  Note that this method is
+         * conservative and may return true for objects that haven't actually
+         * been modified.
+         */
+        final bool IsDirty();
+
+        /**
+         * Clone this object with a fast but shallow copy.  Values will point
+         * to the same values as the original object.
+         */
+        // [TODO] - Implement Object.Clone (requires: Local!Object)
+        /*
+        Local!Object Clone();
+        */
+
+        /**
+         * Returns the context in which the object was created.
+         */
+        // [TODO] - Implement Object.CreationContext (requires: Local!Context)
+        /*
+        final Local!Context CreationContext();
+        */
+
+        /**
+         * Set the backing store of the indexed properties to be managed by the
+         * embedding layer. Access to the indexed properties will follow the rules
+         * spelled out in CanvasPixelArray.
+         * Note: The embedding program still owns the data and needs to ensure that
+         *       the backing store is preserved while V8 has a reference.
+         */
+        final void SetIndexedPropertiesToPixelData(uint8_t* data, int length);
+        final bool HasIndexedPropertiesInPixelData();
+        final uint8_t* GetIndexedPropertiesPixelData();
+        final int GetIndexedPropertiesPixelDataLength();
+
+        /**
+         * Set the backing store of the indexed properties to be managed by the
+         * embedding layer. Access to the indexed properties will follow the rules
+         * spelled out for the CanvasArray subtypes in the WebGL specification.
+         * Note: The embedding program still owns the data and needs to ensure that
+         *       the backing store is preserved while V8 has a reference.
+         */
+        // [TODO] - Implement Object.SetIndexedPropertiesToExternalArrayData (requires: ExternalArrayType)
+        /*
+        final void SetIndexedPropertiesToExternalArrayData(void* data,
+                                                     ExternalArrayType array_type,
+                                                     int number_of_elements);
+        */
+        final bool HasIndexedPropertiesInExternalArrayData();
+        final void* GetIndexedPropertiesExternalArrayData();
+        // [TODO] - Implement Object.GetIndexedPropertiesExternalArrayDataType (requires: ExternalArrayType)
+        /*
+        final ExternalArrayType GetIndexedPropertiesExternalArrayDataType();
+        */
+        final int GetIndexedPropertiesExternalArrayDataLength();
+
+        /**
+         * Checks whether a callback is set by the
+         * ObjectTemplate::SetCallAsFunctionHandler method.
+         * When an Object is callable this method returns true.
+         */
+        final bool IsCallable();
+
+        /**
+         * Call an Object as a function if a callback is set by the
+         * ObjectTemplate::SetCallAsFunctionHandler method.
+         */
+        // [TODO] - Implement Object.CallAsFunction (requires: Local!Value, Handle!Value)
+        /*
+        final Local!Value CallAsFunction(Handle!Value recv,
+                                         int argc,
+                                         Handle!Value argv);
+        */
+
+        /**
+         * Call an Object as a constructor if a callback is set by the
+         * ObjectTemplate::SetCallAsFunctionHandler method.
+         * Note: This method behaves like the Function::NewInstance method.
+         */
+        // [TODO] - Implement Object.CallAsConstructor (requires: Local!Value, Handle!Value)
+        /*
+        final Local!Value CallAsConstructor( int argc, Handle!Value argv );
+        */
+
+        static Local!Object New( Isolate* isolate );
+        static Object Cast( Value obj );
+    }
+
     class Handle( T )
     {
         final void Clear();
@@ -351,7 +737,7 @@ extern(C++, v8) // namespace v8
 
     extern( C++, platform )
     {
-        //TODO
+        // [TODO] - Investigate Linker errors. Problems appear to be with a lack of exporting.
         //Platform CreateDefaultPlatform( int thread_pool_size = 0 );
     }
 }
