@@ -1052,7 +1052,20 @@ extern(C++, v8) // namespace v8
          */
         this() { val_ = null; }
 
-        // [TODO] - Tons of missing functions here
+        /**
+         * Creates a handle for the contents of the specified handle.  This
+         * constructor allows you to pass handles as arguments by value and
+         * to assign between handles.  However, if you try to assign between
+         * incompatible handles, for instance from a Handle<String> to a
+         * Handle<Number> it will cause a compile-time error.  Assigning
+         * between compatible handles, for instance assigning a
+         * Handle<String> to a variable declared as Handle<Value>, is legal
+         * because String is a subclass of Value.
+         */
+        this(S)(Handle!S that) if (TYPE_CHECK!(T, S))
+        {
+            val_ = cast(StorageT)that.val_;
+        }
 
         /**
          * Returns true if the handle is empty.
@@ -1063,6 +1076,18 @@ extern(C++, v8) // namespace v8
          * Sets the handle to be empty. IsEmpty() will then return true.
          */
         final void Clear() { val_ = null; }
+
+        static Handle!T Cast(S)(Handle!S that)
+        {
+            version(V8_ENABLE_CHECKS)
+            {
+                if (that.IsEmpty()) return new Handle!T();
+            }
+
+            return Handle!T(T.Cast(val_));
+        }
+
+        // [TODO] - Tons of missing functions here
 
     private:
         static if(is(T == class))
