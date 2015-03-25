@@ -249,10 +249,21 @@ extern(C++, v8) // namespace v8
          * From C++:
          * ??0HandleScope@v8@@QEAA@PEAVIsolate@1@@Z
          * public: __cdecl v8::HandleScope::HandleScope(class v8::Isolate * __ptr64) __ptr64
+         *
+         * OSX:
+         * Mangling nested structs/classes improperly.
          * ---
          */
-        pragma( mangle, "??0HandleScope@v8@@QEAA@PEAVIsolate@1@@Z" )
-        this( Isolate isolate );
+        version( Windows )
+        {
+            //pragma( mangle, "??0HandleScope@v8@@QEAA@PEAVIsolate@1@@Z" )
+            this( Isolate isolate );
+        }
+        else
+        {
+            //pragma( mangle, "_ZN2v811HandleScope11HandleScopeEPN2v87IsolateE" )
+            this( Isolate isolate );
+        }
 
         /**
          * Counts the number of allocated handles.

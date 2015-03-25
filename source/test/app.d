@@ -41,10 +41,13 @@ unittest
 
     Isolate.CreateParams params;
     //params.constraints.ConfigureDefaults( 0, 0, 0 );
+
+    // Waiting on nested type handling.
     Isolate isolate = Isolate.New( params );
     {
         auto isolate_scope = Isolate.Scope( isolate );
-        auto handle_scope = new HandleScope( isolate );//scoped!( HandleScope )( isolate );
+        // Waiting on nested type handling.
+        //auto handle_scope = new HandleScope( isolate );//scoped!( HandleScope )( isolate );
 
         /*
         Handle!Context context = CreateShellContext(isolate);
