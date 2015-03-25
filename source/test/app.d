@@ -5,9 +5,9 @@ import std.stdio, std.typecons;
 
 // Creates a new execution environment containing the built-in
 // functions.
-/*
 Handle!Context CreateShellContext(Isolate isolate)
 {
+    /*
     // Create a template for the global object.
     Handle!ObjectTemplate global = ObjectTemplate.New( isolate );
     // Bind the global 'print' function to the C++ Print callback.
@@ -26,8 +26,9 @@ Handle!Context CreateShellContext(Isolate isolate)
     global->Set(v8::String::NewFromUtf8(isolate, "version"),
                 v8::FunctionTemplate::New(isolate, Version));
     return Context.New(isolate, null, global);
+    //*/
+    return null;
 }
-*/
 
 unittest
 {
@@ -49,13 +50,13 @@ unittest
         // Waiting on nested type handling.
         //auto handle_scope = new HandleScope( isolate );//scoped!( HandleScope )( isolate );
 
+        Handle!Context context = CreateShellContext( isolate );
         /*
-        Handle!Context context = CreateShellContext(isolate);
         if (context.IsEmpty()) {
             fprintf(stderr, "Error creating context\n");
             return 1;
         }
-        auto context_scope = scoped!( Context.Scope )( context );
+        auto context_scope = Context.Scope( context );
         */
 
         writeln( "Scoped!" );

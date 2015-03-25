@@ -237,39 +237,31 @@ extern(C++, v8) // namespace v8
     class HandleScope
     {
     public:
-        // [TODO] - Investigate Linker Errors
-        /*
-         * Mangling Problems:
-         * ---
-         * Windows:
-         * From D:
-         * ?__ctor@HandleScope@v8@@QEAA@PEAVIsolate@2@@Z
-         * public: __cdecl v8::HandleScope::__ctor(class v8::Isolate *)
-         *
-         * From C++:
-         * ??0HandleScope@v8@@QEAA@PEAVIsolate@1@@Z
-         * public: __cdecl v8::HandleScope::HandleScope(class v8::Isolate * __ptr64) __ptr64
-         *
-         * OSX:
-         * Mangling nested structs/classes improperly.
-         * ---
-         */
-        version( Windows )
-        {
-            //pragma( mangle, "??0HandleScope@v8@@QEAA@PEAVIsolate@1@@Z" )
-            this( Isolate isolate );
-        }
-        else
-        {
-            //pragma( mangle, "_ZN2v811HandleScope11HandleScopeEPN2v87IsolateE" )
-            this( Isolate isolate );
-        }
+        // [TODO] - Implement properly once D's C++ ABI supports ctors
+        //this( Isolate isolate );
 
         /**
          * Counts the number of allocated handles.
          */
         static int NumberOfHandles( Isolate isolate );
         final Isolate GetIsolate() const;
+    }
+
+    /**
+     * A container for extension names.
+     */
+    class ExtensionConfiguration
+    {
+    public:
+        this() { name_count_ = 0; names_ = null; }
+        this(int name_count, const char** names) { name_count_ = name_count; names_ = names; }
+
+        const(char**) begin() const { return &names_[0]; }
+        const(char**) end()  const { return &names_[name_count_]; }
+
+    private:
+        const int name_count_;
+        const char** names_;
     }
 
     /**
@@ -321,11 +313,11 @@ extern(C++, v8) // namespace v8
         // [TODO] - Implement Context.New (requires: Local, Extension Configuration, Handle!T, ObjectTemplate, Value)
         /*
         static Local!Context New(
-            Isolate* isolate,
-            ExtensionConfiguration* extensions = NULL,
-            Handle<ObjectTemplate> global_template = Handle<ObjectTemplate>(),
-            Handle<Value> global_object = Handle<Value>());
-        */
+            Isolate isolate,
+            ExtensionConfiguration extensions = null,
+            Handle!ObjectTemplate global_template = null,
+            Handle!Value global_object = null);
+        //*/
 
         /**
          * Sets the security token for the context.  To access an object in
@@ -344,6 +336,41 @@ extern(C++, v8) // namespace v8
         /*
         final Handle!Value GetSecurityToken();
         */
+
+        /**
+         * Enter this context.  After entering a context, all code compiled
+         * and run is compiled and run in this context.  If another context
+         * is already entered, this old context is saved so it can be
+         * restored when the new context is exited.
+         */
+        final void Enter();
+
+        /**
+         * Exit this context.  Exiting the current context restores the
+         * context that was in place when entering the current context.
+         */
+        final void Exit();
+
+        /** Returns an isolate associated with a current context. */
+        final Isolate GetIsolate();
+
+        /**
+         * Stack-allocated class which sets the execution context for all
+         * operations executed within a local scope.
+         */
+        static struct Scope
+        {
+        public:
+            this(Handle!Context context)
+            {
+                context_ = context;
+                context_.Enter();
+            }
+            ~this() { context_.Exit(); }
+
+        private:
+            Handle!Context context_;
+        }
     }
 
     class Value
@@ -1057,6 +1084,14 @@ extern(C++, v8) // namespace v8
      */
     class Handle(T)
     {
+    private:
+        static if(is(T == class))
+            alias StorageT = T;
+        else
+            alias StorageT = T*;
+
+        StorageT val_;
+
     public:
         /**
          * Creates an empty handle.
@@ -1100,24 +1135,57 @@ extern(C++, v8) // namespace v8
 
         // [TODO] - Tons of missing functions here
 
-    private:
-        static if(is(T == class))
-            alias StorageT = T;
-        else
-            alias StorageT = T*;
+        StorageT get() { return val_; }
+        alias get this;
 
+    private:
         /**
          * Creates a new handle for the specified value.
          */
         this(StorageT val) { val_ = val; }
 
         static Handle!T New(Isolate isolate, StorageT that);
-
-        StorageT val_;
     }
 
+    /**
+     * A light-weight stack-allocated object handle.  All operations
+     * that return objects from within v8 return them in local handles.  They
+     * are created within HandleScopes, and all local handles allocated within a
+     * handle scope are destroyed when the handle scope is destroyed.  Hence it
+     * is not necessary to explicitly deallocate local handles.
+     */
     class Local(T) : Handle!T
     {
+    public:
+        this(S)(Local!S that)
+        {
+            super(cast(StorageT)that.val_);
+
+            /**
+             * This check fails when trying to convert between incompatible
+             * handles. For example, converting from a Handle<String> to a
+             * Handle<Number>.
+             */
+            TYPE_CHECK!(T, S);
+        }
+
+        static Local!T Cast(S)(Local!S that)
+        {
+            version(V8_ENABLE_CHECKS)
+            {
+                if (that.IsEmpty()) return new Local!T();
+            }
+
+            return Local!T(T.Cast(val_));
+        }
+
+    private:
+        static if(is(T == class))
+            alias StorageT = T;
+        else
+            alias StorageT = T*;
+
+        StorageT val_;
     }
 
     extern( C++, platform )
